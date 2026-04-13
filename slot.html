@@ -132,6 +132,40 @@
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.12); }
     }
+    @media (max-width: 768px) {
+
+  body {
+    overflow-x: hidden;
+  }
+
+  h1 {
+    font-size: 1.6em !important;
+  }
+
+  .subtitle {
+    font-size: 0.8em !important;
+  }
+
+  .games-grid {
+    grid-template-columns: 1fr !important;
+    gap: 15px;
+  }
+
+  .game-card {
+    padding: 20px 15px;
+  }
+
+  button {
+    width: 100%;
+    font-size: 0.9em;
+  }
+
+  .balance {
+    position: static;
+    margin: 10px auto;
+    width: fit-content;
+  }
+}
   </style>
 </head>
 <body>
