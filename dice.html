@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎲 HIGH/LOW DICE - Casino Royale</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #0a001f, #1a0033);
+      color: white;
+      font-family: 'Press Start 2P', monospace;
+      text-align: center;
+      min-height: 100vh;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    h1 {
+      font-size: 3em;
+      color: #ffff00;
+      text-shadow: 0 0 25px #ff00ff, 0 0 50px #00ffff;
+      margin: 0;
+    }
+
+    .balance {
+      background: rgba(0,0,0,0.85);
+      padding: 12px 28px;
+      border: 3px solid #ffff00;
+      border-radius: 12px;
+      font-size: 1.35em;
+      color: #ffff00;
+      box-shadow: 0 0 20px #ffff00;
+    }
+
+    .game-area {
+      background: rgba(0, 0, 0, 0.9);
+      border: 6px solid #00ffff;
+      border-radius: 25px;
+      padding: 35px 25px;
+      max-width: 620px;
+      margin: 0 auto;
+      box-shadow: 0 0 60px #ff00ff;
+    }
+
+    #diceResult {
+      font-size: 8.5em;
+      margin: 30px 0;
+      min-height: 160px;
+      transition: all 0.2s ease;
+      text-shadow: 0 0 30px #ffff00;
+    }
+
+    .controls {
+      margin: 25px 0;
+    }
+
+    select, input, button {
+      font-family: 'Press Start 2P', monospace;
+      padding: 16px 25px;
+      margin: 12px;
+      font-size: 1.15em;
+      border-radius: 12px;
+    }
+
+    select, input {
+      background: #111;
+      color: white;
+      border: 4px solid #00ffff;
+    }
+
+    button {
+      background: linear-gradient(#ff00ff, #c800c8);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 0 30px #ff00ff;
+      transition: all 0.4s;
+    }
+
+    button:hover {
+      background: linear-gradient(#ffff00, #ffcc00);
+      color: black;
+      transform: scale(1.1);
+      box-shadow: 0 0 45px #ffff00;
+    }
+
+    #result {
+      margin: 30px auto;
+      padding: 25px;
+      font-size: 1.55em;
+      min-height: 110px;
+      border-radius: 15px;
+      background: rgba(0,0,0,0.75);
+      line-height: 1.6;
+    }
+
+    .win { color: #00ff99; text-shadow: 0 0 25px #00ff99; }
+    .lose { color: #ff3366; text-shadow: 0 0 25px #ff3366; }
+    .jackpot { 
+      color: #ffff00; 
+      animation: jackpotPulse 0.7s infinite alternate; 
+    }
+
+    .back-btn {
+      background: #222;
+      color: #ccc;
+      padding: 14px 32px;
+      font-size: 1.05em;
+      border: 2px solid #555;
+    }
+
+    @keyframes jackpotPulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.18); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <button class="back-btn" onclick="window.location.href='main.html'">← BACK TO LOBBY</button>
+    <h1>🎲 HIGH / LOW DICE</h1>
+    <div class="balance" id="balance">Balance: ₦1,000,000</div>
+  </div>
+
+  <div class="game-area">
+    <h2>CHOOSE LOW OR HIGH</h2>
+    <p style="color:#00ffff; margin:10px 0 25px;">1-18 = LOW &nbsp;&nbsp;&nbsp; 19-36 = HIGH</p>
+
+    <select id="diceChoice">
+      <option value="">— SELECT RANGE —</option>
+      <option value="low">1 - 18 (LOW)</option>
+      <option value="high">19 - 36 (HIGH)</option>
+    </select>
+
+    <div id="diceResult">🎲</div>
+
+    <div class="controls">
+      <input id="diceBet" type="number" placeholder="Bet Amount" value="8000">
+      <br>
+      <button onclick="playDice()">ROLL DICE</button>
+    </div>
+  </div>
+
+  <div id="result"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+// ==================== SOUND SYSTEM ====================
+const sounds = {
+  roll:    "https://assets.mixkit.co/sfx/preview/2578/2578.wav",   // Dice rolling sound
+  win:     "https://assets.mixkit.co/sfx/preview/2019/2019.wav",   // Win sound
+  bigwin:  "https://assets.mixkit.co/sfx/preview/2018/2018.wav",   // Strong win
+  lose:    "https://assets.mixkit.co/sfx/preview/2572/2572.wav",   // Loss sound
+  click:   "https://assets.mixkit.co/sfx/preview/2568/2568.wav"    // Button click
+};
+
+let soundEnabled = true;
+
+function playSound(type) {
+  if (!soundEnabled || !sounds[type]) return;
+  
+  const audio = new Audio(sounds[type]);
+  audio.volume = 0.65;
+  audio.play().catch(() => {});
+}
+
+// ==================== GAME LOGIC ====================
+let money = 1000000;
+
+function updateBalance() {
+  document.getElementById("balance").innerText = `Balance: ₦${money.toLocaleString()}`;
+  localStorage.setItem("casinoMoney", money);
+}
+
+function showResult(text, className) {
+  const res = document.getElementById("result");
+  res.innerHTML = text;
+  res.className = className || "";
+}
+
+async function playDice() {
+  const choice = document.getElementById("diceChoice").value;
+  let bet = parseInt(document.getElementById("diceBet").value) || 0;
+
+  if (!choice) {
+    alert("Please choose Low (1-18) or High (19-36)!");
+    return;
+  }
+  if (bet <= 0 || bet > money) {
+    alert("Please enter a valid bet amount!");
+    return;
+  }
+
+  // Button click sound
+  playSound('click');
+
+  money -= bet;
+  updateBalance();
+
+  const diceEl = document.getElementById("diceResult");
+
+  // Rolling animation with sound
+  playSound('roll');
+
+  for (let i = 0; i < 22; i++) {
+    const randomNum = Math.floor(Math.random() * 36) + 1;
+    diceEl.textContent = randomNum;
+    diceEl.style.transform = `rotate(${Math.random() * 80 - 40}deg)`;
+    await new Promise(r => setTimeout(r, 55));
+  }
+
+  // Final roll
+  let roll = Math.floor(Math.random() * 36) + 1;
+  diceEl.textContent = roll;
+  diceEl.style.transform = "rotate(0deg)";
+
+  let isHigh = roll >= 19;
+  let playerChoseHigh = choice === "high";
+
+  let resultText = `You rolled: <strong style="font-size:1.8em; color:#ffff00">${roll}</strong><br>`;
+
+  if ((playerChoseHigh && isHigh) || (!playerChoseHigh && !isHigh)) {
+    let win = bet * 2;
+    money += win;
+    resultText += `🎉 CORRECT! +₦${win.toLocaleString()}`;
+    showResult(resultText, "win");
+    playSound('win');                    // Win sound
+    confetti({ particleCount: 250, spread: 90 });
+  } else {
+    resultText += "💸 Wrong guess - House wins";
+    showResult(resultText, "lose");
+    playSound('lose');                   // Loss sound
+  }
+
+  updateBalance();
+}
+
+// Load saved balance when page opens
+if (localStorage.getItem("casinoMoney")) {
+  money = parseInt(localStorage.getItem("casinoMoney"));
+}
+updateBalance();
+</script>
+</body>
+</html>

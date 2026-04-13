@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CASINO ROYALE • Win Big</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #1a0033, #000);
+  color: white;
+  font-family: 'Press Start 2P', monospace;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+/* HERO */
+.hero {
+  padding: 80px 20px;
+}
+
+.hero h1 {
+  font-size: 3em;
+  color: #ff00ff;
+  text-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffff;
+  animation: glow 2s infinite alternate;
+}
+
+.hero p {
+  margin-top: 20px;
+  font-size: 1em;
+  color: #ffff00;
+}
+
+/* BUTTON */
+.play-btn {
+  margin-top: 40px;
+  padding: 18px 50px;
+  font-size: 1.2em;
+  background: linear-gradient(#ff00ff, #aa00aa);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 0 25px #ff00ff;
+  transition: 0.3s;
+}
+
+.play-btn:hover {
+  background: linear-gradient(#ffff00, #ffaa00);
+  color: black;
+  transform: scale(1.1);
+  box-shadow: 0 0 40px #ffff00;
+}
+
+/* FEATURES */
+.features {
+  margin-top: 80px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.card {
+  width: 260px;
+  padding: 20px;
+  border: 3px solid #00ffff;
+  border-radius: 15px;
+  background: rgba(0,0,0,0.8);
+  box-shadow: 0 0 20px #00ffff;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-10px) scale(1.05);
+  border-color: #ffff00;
+  box-shadow: 0 0 30px #ffff00;
+}
+
+.card h3 {
+  color: #ff00ff;
+}
+
+.card p {
+  font-size: 0.7em;
+}
+
+/* JACKPOT TEXT */
+.jackpot {
+  margin-top: 80px;
+  font-size: 1.5em;
+  color: #00ffcc;
+  text-shadow: 0 0 20px #00ffcc;
+  animation: pulse 1.5s infinite;
+}
+
+/* FOOTER */
+footer {
+  margin-top: 80px;
+  font-size: 0.7em;
+  color: #555;
+}
+
+/* ANIMATIONS */
+@keyframes glow {
+  from { text-shadow: 0 0 20px #ff00ff; }
+  to { text-shadow: 0 0 40px #ff00ff, 0 0 60px #00ffff; }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+  <h1>🎰 CASINO ROYALE 🎰</h1>
+  <p>Win Big • Play Smart • Built by ANILORD</p>
+
+  <button class="play-btn" onclick="startGame()">🚀 PLAY NOW</button>
+</div>
+
+<div class="jackpot">
+  💰 DAILY JACKPOTS UP TO ₦10,000,000 💰
+</div>
+
+<div class="features">
+  <div class="card">
+    <h3>🎰 Slots</h3>
+    <p>Spin and hit massive jackpots instantly</p>
+  </div>
+
+  <div class="card">
+    <h3>🎡 Roulette</h3>
+    <p>Bet on red, black or go all in on numbers</p>
+  </div>
+
+  <div class="card">
+    <h3>🎲 Dice</h3>
+    <p>High risk, high reward gameplay</p>
+  </div>
+
+  <div class="card">
+    <h3>⚡ Instant Play</h3>
+    <p>No signup required, jump in immediately</p>
+  </div>
+</div>
+
+<footer>
+  Gamble Responsibly • 18+ • Casino Royale © 2026
+</footer>
+
+<script>
+function startGame() {
+  // Redirect to your main casino page
+  window.location.href = "main.html";
+}
+</script>
+
+</body>
+</html>

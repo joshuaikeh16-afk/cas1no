@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚙️ SETTINGS - Casino Royale</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #0a001f, #1a0033);
+      color: white;
+      font-family: 'Press Start 2P', monospace;
+      min-height: 100vh;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-size: 2.8em;
+      color: #ffff00;
+      text-shadow: 0 0 25px #ff00ff, 0 0 50px #00ffff;
+      margin: 0;
+    }
+
+    .balance {
+      background: rgba(0,0,0,0.85);
+      padding: 12px 28px;
+      border: 3px solid #ffff00;
+      border-radius: 12px;
+      font-size: 1.35em;
+      color: #ffff00;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .settings-box {
+      background: rgba(0, 0, 0, 0.9);
+      border: 5px solid #00ffff;
+      border-radius: 20px;
+      padding: 35px;
+      margin-bottom: 25px;
+      box-shadow: 0 0 50px #ff00ff;
+    }
+
+    h2 {
+      color: #ff00ff;
+      text-shadow: 0 0 15px #ff00ff;
+      margin-bottom: 25px;
+    }
+
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 0;
+      border-bottom: 2px solid #333;
+    }
+
+    .setting-item:last-child {
+      border-bottom: none;
+    }
+
+    label {
+      font-size: 1.1em;
+    }
+
+    .value {
+      color: #00ffff;
+      font-weight: bold;
+    }
+
+    button {
+      background: linear-gradient(#ff00ff, #c800c8);
+      color: white;
+      padding: 16px 35px;
+      margin: 15px 8px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1em;
+      cursor: pointer;
+      box-shadow: 0 0 25px #ff00ff;
+      transition: all 0.3s;
+    }
+
+    button:hover {
+      background: linear-gradient(#ffff00, #ffaa00);
+      color: black;
+      transform: scale(1.05);
+    }
+
+    .danger {
+      background: linear-gradient(#ff0033, #aa0022);
+    }
+
+    .danger:hover {
+      background: linear-gradient(#ff3366, #cc1122);
+    }
+
+    .back-btn {
+      background: #222;
+      color: #ccc;
+      padding: 12px 30px;
+    }
+
+    .info {
+      font-size: 0.95em;
+      color: #888;
+      margin-top: 30px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <button class="back-btn" onclick="window.location.href='main.html'">← BACK TO LOBBY</button>
+    <h1>⚙️ SETTINGS</h1>
+    <div class="balance" id="balance">Balance: ₦1,000,000</div>
+  </div>
+
+  <div class="container">
+
+    <div class="settings-box">
+      <h2>Account & Balance</h2>
+      
+      <div class="setting-item">
+        <label>Current Balance</label>
+        <span class="value" id="currentBalance">₦1,000,000</span>
+      </div>
+      
+      <div class="setting-item">
+        <label>Player ID</label>
+        <span class="value" id="playerId">GUEST-ABJ-2026</span>
+      </div>
+      
+      <div class="setting-item">
+        <label>WhatsApp Number</label>
+        <span class="value" id="whatsapp">+234 812 425 4759</span>
+      </div>
+    </div>
+
+    <div class="settings-box">
+      <h2>Game Preferences</h2>
+      
+      <div class="setting-item">
+  <label>Sound Effects</label>
+  <button onclick="toggleSound()">ON</button>
+</div>
+      <div class="setting-item">
+        <label>Confetti on Big Wins</label>
+        <button onclick="toggleConfetti()">ON</button>
+      </div>
+      
+      <div class="setting-item">
+        <label>Fast Animation Mode</label>
+        <button onclick="toggleFastMode()">OFF</button>
+      </div>
+    </div>
+
+    <div class="settings-box">
+      <h2>Support & Contact</h2>
+      <button onclick="contactSupport()">📲 Contact Support on WhatsApp</button>
+      <button onclick="showDepositInfo()">💰 How to Deposit</button>
+      <button onclick="showWithdrawInfo()">💸 How to Withdraw</button>
+    </div>
+
+    <div class="settings-box">
+      <h2 style="color:#ff3366;">Danger Zone</h2>
+      <button class="danger" onclick="resetAllData()">RESET ALL DATA (Clear Balance & History)</button>
+    </div>
+
+    <div class="info">
+      Casino Royale © 2026 • Abuja, Nigeria<br>
+      Gamble Responsibly
+    </div>
+  </div>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+// ==================== GLOBAL SOUND SYSTEM ====================
+const sounds = {
+  spin:     "https://assets.mixkit.co/sfx/preview/2578/2578.wav",
+  win:      "https://assets.mixkit.co/sfx/preview/2019/2019.wav",
+  bigwin:   "https://assets.mixkit.co/sfx/preview/2018/2018.wav",
+  lose:     "https://assets.mixkit.co/sfx/preview/2572/2572.wav",
+  click:    "https://assets.mixkit.co/sfx/preview/2568/2568.wav",
+  roulette: "https://assets.mixkit.co/sfx/preview/2570/2570.wav"
+};
+
+let soundEnabled = true;
+
+// Load sound preference from localStorage
+if (localStorage.getItem("soundEnabled") !== null) {
+  soundEnabled = localStorage.getItem("soundEnabled") === "true";
+}
+
+function playSound(type) {
+  if (!soundEnabled || !sounds[type]) return;
+  
+  const audio = new Audio(sounds[type]);
+  audio.volume = 0.65;
+  audio.play().catch(() => {});
+}
+
+// Toggle Sound (this will now actually work!)
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  localStorage.setItem("soundEnabled", soundEnabled);
+  
+  const btn = document.querySelector('button[onclick="toggleSound()"]');
+  if (btn) btn.textContent = soundEnabled ? "ON" : "OFF";
+  
+  alert("Sound effects are now " + (soundEnabled ? "ENABLED ✅" : "DISABLED 🔇"));
+}
+
+// ==================== OTHER SETTINGS ====================
+let money = 1000000;
+
+function updateBalance() {
+  const bal = document.getElementById("balance");
+  const currentBal = document.getElementById("currentBalance");
+  bal.innerText = `Balance: ₦${money.toLocaleString()}`;
+  currentBal.innerText = `₦${money.toLocaleString()}`;
+}
+
+function toggleConfetti() {
+  alert("Confetti on big wins is currently ENABLED ✨");
+}
+
+function toggleFastMode() {
+  alert("Fast Animation Mode toggled (Demo)");
+}
+
+function contactSupport() {
+  const msg = encodeURIComponent("Hello, I need help with Casino Royale.");
+  window.open(`https://wa.me/2348124254759?text=${msg}`, '_blank');
+}
+
+function showDepositInfo() {
+  alert("To deposit:\n\n1. Send money via bank transfer or USSD\n2. Send proof of payment + your Player ID on WhatsApp\n3. We credit instantly or within 15 mins.");
+}
+
+function showWithdrawInfo() {
+  alert("To withdraw:\n\nMinimum: ₦50,000\nSend request on WhatsApp with:\n• Amount\n• Bank Name\n• Account Number\n• Account Name");
+}
+
+function resetAllData() {
+  if (confirm("⚠️ WARNING!\n\nThis will reset your balance to ₦1,000,000 and delete all transaction history.\n\nAre you sure?")) {
+    localStorage.removeItem("casinoMoney");
+    localStorage.removeItem("casinoTransactions");
+    localStorage.removeItem("soundEnabled");
+    money = 1000000;
+    updateBalance();
+    alert("All data has been reset successfully!");
+  }
+}
+
+// ==================== INITIAL LOAD ====================
+if (localStorage.getItem("casinoMoney")) {
+  money = parseInt(localStorage.getItem("casinoMoney"));
+}
+updateBalance();
+
+// Update sound button text on load
+window.onload = function() {
+  const soundBtn = document.querySelector('button[onclick="toggleSound()"]');
+  if (soundBtn) {
+    soundBtn.textContent = soundEnabled ? "ON" : "OFF";
+  }
+};
+</script>
+</body>
+</html>
